@@ -15,6 +15,7 @@ library(knitr)
 library(shiny)
 library(tidyverse)
 library(ggplot2)
+library(plotly)
 ```
 
 
@@ -24,26 +25,45 @@ Analysis
 Row
 -------------------------------------------------------------------------
 
-### Map Show
+### Analysis
 
-```{r map}
+```{r analysis1}
 
 n_iris <- nrow(iris)
 valueBox(n_iris, icon = "fa-pencil", color = "#fa7404")
 
 ```
 
+ 
+ Visualize
+=====================================   
+
+### Histogram
+ 
+```{r plot}
+ 
+p1 <-  ggplot(iris) +
+   geom_histogram(aes(Sepal.Length))
+ 
+ggplotly(p1)
+
+```
+ 
 Row
 -------------------------------------------------------------------------
  
-### Plot
  
- ```{r plot}
- 
- ggplot(iris) +
-   geom_histogram(aes(Sepal.Length))
- 
- ```
- 
- 
- 
+### Density and Scatterplot Overlay Using geom_density
+
+```{r plot2}
+df <- data.frame(x <- rchisq(1000, 10, 10),
+                 y <- rnorm(1000))
+
+p <- ggplot(df, aes(x, y)) + 
+     geom_point(alpha = 0.5) + 
+     geom_density_2d() + 
+     theme(panel.background = element_rect(fill = '#ffffff'))
+
+ggplotly(p)
+```
+
