@@ -1,5 +1,5 @@
 ---
-title: "Map"
+title: "dashboard_map"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -15,6 +15,7 @@ library(knitr)
 library(shiny)
 library(tidyverse)
 ```
+
 
 Analysis
 =====================================   
