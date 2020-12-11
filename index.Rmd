@@ -1,0 +1,33 @@
+---
+title: "Map"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+date: "`r Sys.Date()`"
+runitime: shiny
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(knitr)
+library(shiny)
+library(tidyverse)
+
+```
+
+Analysis
+=====================================   
+
+Row
+-------------------------------------------------------------------------
+
+### Map Show
+
+```{r map}
+
+n_iris <- nrow(iris)
+valueBox(n_iris, icon = "fa-pencil", color = "#fa7404")
+
+```
