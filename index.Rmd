@@ -13,6 +13,8 @@ library(flexdashboard)
 library(knitr)
 library(shiny)
 library(tidyverse)
+library(tidytext)
+library(tidylo)
 library(ggplot2)
 library(ggrepel)
 
@@ -78,18 +80,82 @@ map %>%
 ```
 
 
-States map
+States beer map
 =====================================   
 
 ```{r us_map}
 # https://eric.clst.org/tech/usgeojson/
+# https://rpubs.com/juliasilge/beer_awards
+
+beer_awards <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-20/beer_awards.csv') %>%
+  mutate(state = str_to_upper(state))
+
+word_counts <- beer_awards %>%
+  unnest_tokens(word, category) %>%
+  anti_join( get_stopwords() ) %>%
+  count(state, word, sort = TRUE)
+
+word_log_odds <- word_counts %>%
+  bind_log_odds(state, word, n) %>%
+  arrange(state, word)
+
+state_words <- word_log_odds %>%
+  group_by(n) %>%
+  filter(sum(n) > 5) %>%
+  ungroup() %>%
+  group_by(state) %>%
+  top_n(3) %>%
+  ungroup() %>%
+  select(state, word)
+
+labels <- state_words %>%
+  group_by(state) %>%
+  summarise(word = paste(word, collapse = "<br/>"))
+
 states <- geojsonio::geojson_read("gz_2010_us_040_00_20m.json", what = "sp")
 
-leaflet(states) %>%
-  addTiles() %>% 
-  setView(-96, 37.8, 4) %>% 
-  addPolygons()
+medals <- tibble(state.name = states$NAME) %>%
+  left_join(
+    beer_awards %>%
+      count(state) %>%
+      left_join(tibble(state = state.abb, state.name))
+  ) %>%
+  left_join(labels) %>%
+  replace_na(list(n = 0,
+                  word = "<i>none</i>"))
 
+states$medals <- medals$n
+
+label <- map(medals$word, htmltools::HTML)
+
+bins <- c(0, 50, 100, 200, 500, 1000)
+pal <- colorBin(palette = "OrRd", domain = medals, bins = bins)
+
+m <- leaflet(states) %>%
+  setView(-96, 37.8, 4) %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = ~ pal(medals),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    fillOpacity = 0.5,
+    highlight = highlightOptions(
+      weight = 5,
+      color = "white",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = label,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>%
+  addLegend("bottomright", pal = pal, values = ~medals,
+            title = "Total medals",
+            opacity = 1
+  )
+
+m
 ```
 
 
