@@ -28,6 +28,8 @@ library(rvest)
 library(lwgeom)
 library(rnaturalearth)
 
+library(spocc)
+
 library(DT)
 ```
 
@@ -217,6 +219,28 @@ leaflet(airport_table) %>%
   addMarkers(lng=~Longitude,lat=~Latitude,popup=~`Place Name`,label=paste(airport_table$`Place Name`,"</br>",airport_table$Longitude,airport_table$Latitude,sep=","))
 
 ```
+
+States hawk map
+=====================================   
+
+```{r us_hawk}
+
+df <- occ(query = 'Accipiter striatus', from = 'bison')
+
+dat <- occ2df(df)
+
+redLeafIcon <- makeIcon(
+  iconUrl = "http://leafletjs.com/examples/custom-icons/leaf-red.png",
+  iconWidth = 10, iconHeight = 20,
+)
+
+leaflet(dat) %>%
+  addTiles() %>%
+  addMarkers(dat$longitude, dat$latitude, popup = dat$date, icon = redLeafIcon)
+
+
+```
+
 
 Asia map
 =====================================   
