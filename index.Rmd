@@ -33,7 +33,7 @@ library(spocc)
 library(DT)
 ```
 
-Globe
+Globe MAP
 =====================================   
 
 Row
@@ -94,7 +94,7 @@ datatable(coffee_df)
 ```{r world_coffee_map}
 
 ggplot(data =  world_joined)+
-  geom_sf(aes(fill = as.numeric(world_joined$Metric.Tons)), 
+  geom_sf(aes(fill = as.numeric(Metric.Tons)), 
           color = "black")+ 
   labs(fill='Coffee production')  +
   scale_fill_viridis_c(option = "viridis")
@@ -300,8 +300,8 @@ tm_shape(afripop2020) +
   tm_raster(palette = rev(viridisLite::magma(5)), breaks=c(0,2,20,200,2000,25000)) +
   tm_shape(africountries) +
   tm_borders("red", lwd = .7) +
-  tm_shape(afrihighway) +
-  tm_lines(col = "green", alpha=0.6) + 
+#  tm_shape(afrihighway) +
+#  tm_lines(col = "green", alpha=0.6) + 
   tm_shape(africapitals) +
   tm_symbols(col = "blue", alpha=0.6, scale = .4 )+
   tm_legend(show = FALSE)
