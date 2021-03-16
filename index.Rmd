@@ -31,6 +31,13 @@ library(rnaturalearth)
 library(spocc)
 
 library(DT)
+
+library(lubridate)
+library(showtext)
+library(patchwork)
+library(pwt10)
+library(ragg)
+
 ```
 
 Globe MAP
@@ -59,6 +66,100 @@ ggplot() +
 
 
 ```
+
+World GDP growth
+=====================================   
+
+```{r world_gdp}
+
+showtext_opts(dpi = 300)
+showtext_auto(enable = TRUE)
+
+data(pwt10.0)
+
+world_map <- map_data("world") %>%
+  filter(region != "Antarctica") %>%
+  as_tibble() %>%
+  fuzzyjoin::regex_left_join(maps::iso3166, c(region = "mapname")) 
+
+chart <- function(country_name){
+  data <- pwt10.0 %>%
+    filter(country == as.character(country_name)) 
+  min_axis <- 0
+  max_axis <- max(data$rgdpe) * 1.1
+  min_date <- min(data$year)
+  data %>%
+    ggplot(aes(year, rgdpe)) +
+    geom_point( size = 1) +
+    geom_line(color = "grey50") +
+    geom_hline(yintercept = 0, color = "grey50", linetype = "dashed") +
+    scale_y_continuous(limits = c(min_axis, max_axis)) +
+    guides(color = FALSE)+
+    labs(title = country_name) +
+    theme(plot.background = element_rect(fill = NA, color = NA),
+          panel.background = element_rect(fill = NA, color = NA),
+          axis.title = element_blank(),
+          axis.text = element_text(family = "heebo", size = 2),
+          panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(color = "grey80", linetype = "dotted"),
+          plot.title = element_text(family = "heebo", size = 5))
+}
+
+centre <- map_data("world") %>% tbl_df %>% 
+  filter(region %in% c("Norway", "Switzerland", "Germany", "South Africa", "Argentina", "China", "India", "Japan", "Canada", "Mexico")) %>%
+  group_by(region) %>%
+  summarise(centx = mean(long),
+            centy = mean(lat))
+countries_lines <- tibble(x = c(-65.5,25.3,-110,-104,135.3,107, 83.5, 10.4,16.2,8.31),
+                          xend = c(-85, 65, -200, -200, 210, 210, 210, 170, 47, -60),
+                          y = c(-37.7, -28.8, 60, 24.2, 35.47, 35, 23.4, 51.2, 60, 46.2),
+                          yend = c(-75, -75, 70, 10, 75, 25, -50, 115, 115, 115)
+)
+
+map <- ggplot() +
+  geom_polygon(data = world_map, aes(long, lat, group = group, fill = group), color = "grey50", size = 0.3) +
+  scale_fill_gradient2(low = "#F21A00", mid = "#E9C825", high = "#3B9AB2", midpoint = -0.3, labels = scales::percent, na.value="grey80") +
+  geom_segment(data = countries_lines, aes(x = x, xend = xend, y = y , yend = yend), color = "grey50", inherit.aes = FALSE) +
+  scale_x_continuous(limits = c(-350, 350), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-130, 170)) +
+  labs(fill = "Growth of GDP", size =10) +
+  guides(fill = guide_colorbar(title.position = "top",
+                               label.position = "bottom",
+                               title.hjust = 0.2,
+                               barwidth = 10)) +
+  theme_void() +
+  theme(legend.position = c(0.15, 0.12),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 2))
+
+
+norway <- chart("Norway")
+swiss <- chart("Switzerland")
+germany <- chart("Germany")
+south_africa <- chart("South Africa")
+argentina <- chart("Argentina")
+china <- chart("China")
+india <- chart("India")
+japan <- chart("Japan")
+canada <- chart("Canada")
+mexico <- chart("Mexico")
+final <- map + 
+  inset_element(norway,0.5,0.8,0.65,1.0) +
+  inset_element(swiss,0.3,0.8,0.45,1.0) +
+  inset_element(germany,0.7,0.8,0.85,1.0) +
+  inset_element(south_africa,0.55,0.05,0.70,0.25) +
+  inset_element(japan,0.8,0.6,0.95,0.8) +
+  inset_element(china,0.8,0.4,0.95,0.6) +
+  inset_element(india,0.8,0.15,0.95,0.35) +
+  inset_element(argentina,0.3,0.05,0.45,0.25) +
+  inset_element(mexico,0.05,0.4,0.2,0.6) +
+  inset_element(canada,0.05,0.6,0.2,0.8) 
+
+final
+
+```
+
 
 World coffee production
 =====================================   
