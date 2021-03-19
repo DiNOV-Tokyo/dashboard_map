@@ -22,6 +22,7 @@ library(plotly)
 library(afrilearndata)
 library(sf)
 library(leaflet)
+library(leaflet.minicharts)
 library(tmap)
 
 library(rvest)
@@ -37,6 +38,8 @@ library(showtext)
 library(patchwork)
 library(pwt10)
 library(ragg)
+
+library(rFIA)
 
 ```
 
@@ -338,6 +341,29 @@ redLeafIcon <- makeIcon(
 leaflet(dat) %>%
   addTiles() %>%
   addMarkers(dat$longitude, dat$latitude, popup = dat$date, icon = redLeafIcon)
+
+
+```
+
+US Ozone
+===========================================
+
+```{r ozone}
+
+ref <- getFIA(states = c('CA', "AZ"), tables = "OZONE_PLOT")
+
+ref$OZONE_PLOT %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addMinicharts(
+    lng = ref$OZONE_PLOT$LON,
+    lat = ref$OZONE_PLOT$LAT,
+    type = "bar",
+    chartdata = ref$OZONE_PLOT[,1:2],
+    colorPalette = c("red", "yellow"),
+    width = 45, height = 45
+  )
+
 
 
 ```
