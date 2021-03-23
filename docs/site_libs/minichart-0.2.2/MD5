@@ -1,4 +1,4 @@
-62ce222cec984720e3ddf4364b0a9278 *DESCRIPTION
+fdd72e2666db2267fd6e46c86a9b6f6e *DESCRIPTION
 4a51b6a410f99f3ed0f14fb87d843ed5 *INDEX
 8eb461f447c32f3085f846907a97ca26 *LICENSE
 f65e8e7d9da95643b613cc177004b02d *Meta/Rd.rds
@@ -7,7 +7,7 @@ f65e8e7d9da95643b613cc177004b02d *Meta/Rd.rds
 1e7a9fd536d8f7fc9154beeb3bf0a45f *Meta/hsearch.rds
 77f323a8d71e76909c4fca875cd25cd3 *Meta/links.rds
 b2d66073b8fb8cf008f8cd87a8532f6c *Meta/nsInfo.rds
-7147e794f0ad3bfdc59aa71c18efd393 *Meta/package.rds
+a5115059a71ef47b747d2ccca28b6e62 *Meta/package.rds
 4a5384aeb5b33f3aeda302f01bfb15d7 *Meta/vignette.rds
 0d824a68bff75e68067ebd34c1f25de7 *NAMESPACE
 acf7dda8233c49de19c833582f38918f *NEWS
@@ -25,9 +25,9 @@ bbd6fe9cbe3a49384533e25ec773b14f *doc/introduction.html
 b06871f281fee6b241d60582ae9369b9 *font-awesome-4.7.0/fonts/fontawesome-webfont.ttf
 9d10a5315d88c539d245e00c156c07d3 *help/AnIndex
 e151f3ea8226751cd6114e05cc94b4de *help/aliases.rds
-28f13809c54378b447fe0db53ba5f4f5 *help/leaflet.minicharts.rdb
-ca7fc885a9337f0f0f2d91fe3e1d7832 *help/leaflet.minicharts.rdx
-d397521000feb1ce9633f33e78a12253 *help/paths.rds
+009c81da35da72cc80f11482892921ad *help/leaflet.minicharts.rdb
+f8df8a07953af55d5d394fc6d5a1cdda *help/leaflet.minicharts.rdx
+d877537c4b91fa240c75c3bea80fd04d *help/paths.rds
 b6e53107e78283a22315827fb6bd96f8 *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
 a0cc4a3038ed0ec943c09c6e728f09b3 *leaflet.minicharts.min.js
