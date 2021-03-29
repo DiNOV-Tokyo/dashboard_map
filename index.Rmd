@@ -388,14 +388,18 @@ ref <- getFIA(states = c('CA', "AZ"), tables = "OZONE_PLOT")
 ref$OZONE_PLOT %>% 
   leaflet() %>% 
   addTiles() %>% 
-  addMinicharts(
+  addMarkers(
     lng = ref$OZONE_PLOT$LON,
-    lat = ref$OZONE_PLOT$LAT,
-    type = "bar",
-    chartdata = ref$OZONE_PLOT[,1:2],
-    colorPalette = c("red", "yellow"),
-    width = 45, height = 45
-  )
+    lat = ref$OZONE_PLOT$LAT
+    )
+#  addMinicharts(
+#    lng = ref$OZONE_PLOT$LON,
+#    lat = ref$OZONE_PLOT$LAT,
+#    type = "bar",
+#    chartdata = ref$OZONE_PLOT[,1:2],
+#    colorPalette = c("red", "yellow"),
+#    width = 45, height = 45
+#  )
 
 
 
@@ -493,3 +497,38 @@ dat %>%
 
 ```
 
+ GBIF
+=====================================   
+
+
+Row
+-----------------------------------------------------------------------
+
+### GBIF Data plot
+
+```{r gbif}
+
+library(rgbif)
+
+gbif_data <- occ_data(scientificName = "Equisetum arvense", hasCoordinate = TRUE, limit = 100)
+
+gbif_select_data <- gbif_data$data %>% 
+  select(scientificName, decimalLatitude, decimalLongitude, eventDate) 
+
+options(viewer = NULL)
+
+gbif_select_data %>% 
+  leaflet() %>%
+  addTiles() %>% 
+  addMarkers(lat=gbif_select_data$decimalLatitude, lng=gbif_select_data$decimalLongitude)
+
+```
+
+### Data
+
+```{r data_gbif}
+
+gbif_select_data %>% 
+  datatable()
+
+```
