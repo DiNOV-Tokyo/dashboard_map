@@ -395,7 +395,7 @@ asia_dat <- asia %>%
     y = st_coordinates(centroid)[, 2]
   ) %>%
   arrange(desc(pop_est)) %>% 
-  select(sovereignt, admin, adm0_a3, name, formal_en, pop_est, gdp_md_est, subregion, x, y, geometry, centroid)
+  select(name, adm0_a3, formal_en, pop_est, gdp_md_est, subregion, x, y, geometry, centroid)
 
 datatable(asia_dat)
 
@@ -411,7 +411,9 @@ asia_dat %>%
   coord_sf(datum = NA) +
   scale_fill_viridis_c(alpha = 0.6) +
   theme_void()+ 
-  geom_text_repel(aes(x = x, y = y, label = name), col="skyblue", size = 4)
+  geom_text_repel(aes(x = x, y = y, label = name), col="blue", size = 2)+
+   labs(title="Asian Countries in population", 
+         caption="Sources:rnaturalearth") 
 
 
 ```
