@@ -44,6 +44,7 @@ library(rFIA)
 library(pals)  
 # devtools::install_github("ropenscilabs/ochRe")
 library(ochRe)
+library(wesanderson)
 
 library(highcharter)
 ```
@@ -277,6 +278,44 @@ eu_map %>%
 
 ```
 
+Great Britain UFO map
+==========================================
+
+```{r GB_UFO}
+
+
+map <- read_sf("GBR_adm/GBR_adm1.shp") # GBのシェープファイル
+
+dat <- map %>%
+  group_by(NAME_1) %>% 
+  mutate(
+    centroid = st_centroid(geometry),
+    x = st_coordinates(centroid)[, 1],
+    y = st_coordinates(centroid)[, 2]
+  ) 
+
+
+ufo_sightings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-25/ufo_sightings.csv")
+
+sightings <- ufo_sightings %>%
+  filter(country == "gb") %>%
+  group_by(city_area, latitude, longitude) %>%
+  summarise(count=n()) %>% 
+  ungroup()
+
+
+dat %>%
+  ggplot() +
+  geom_sf(aes(fill = NAME_1)) +  # 人口毎に色分け
+  coord_sf(datum = NA) + 
+  theme_void()+
+  geom_point(data = sightings, aes(x = longitude, y = latitude, size = count), col="yellow") +
+  scale_fill_manual(name = "country", values = wes_palette("Moonrise2"))+
+  geom_text_repel(aes(x = x, y = y, label = NAME_1), col="red", size = 1.5)
+
+
+
+```
 
 States beer map
 =====================================   
